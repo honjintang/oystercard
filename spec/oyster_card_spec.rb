@@ -28,7 +28,7 @@ describe OysterCard do
     end
 
     it 'expects top up after maximum balance reached to return error' do
-      expect {oyster_card.top_up(95)}.to raise_error('Cannot top up: maximum balance exceeded')
+      expect {oyster_card.top_up(95)}.to raise_error("Cannot top up: maximum balance (£#{OysterCard::MAX_BALANCE}) exceeded")
     end
   end
 
