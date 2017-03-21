@@ -41,10 +41,7 @@ describe OysterCard do
     end
 
     it "raises exception when user tries to deduct a greater amount of money than is on the card balance" do
-
       expect { oyster_card.deduct(10) }.to raise_error("Cannot deduct money: insufficient funds")
-
-
     end
 
   end
@@ -60,5 +57,31 @@ describe OysterCard do
   #
   # end
 
+  describe "#in_journey?" do
+
+    it 'returns false if card is not in journey' do
+      expect(oyster_card).not_to be_in_journey
+    end
+
+  end
+
+  describe "#touch_in" do
+
+    it 'should return in_journey? as true after oyster has called touch_in' do
+      oyster_card.touch_in
+      expect(oyster_card).to be_in_journey
+    end
+
+  end
+
+  describe "#touch_out" do
+
+    it 'should return in_journey as false after oyster on a journey calls touch_out' do
+      oyster_card.touch_in
+      oyster_card.touch_out
+      expect(oyster_card).not_to be_in_journey
+    end
+
+  end
 
 end
