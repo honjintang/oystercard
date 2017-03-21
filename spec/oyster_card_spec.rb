@@ -32,5 +32,33 @@ describe OysterCard do
     end
   end
 
+  describe "#deduct" do
+
+    it "expects deduct to remove the specificied amount from balance" do
+      oyster_card.top_up(20)
+      oyster_card.deduct(10)
+      expect(oyster_card.balance).to eq(10)
+    end
+
+    it "raises exception when user tries to deduct a greater amount of money than is on the card balance" do
+
+      expect { oyster_card.deduct(10) }.to raise_error("Cannot deduct money: insufficient funds")
+
+
+    end
+
+  end
+
+  # NOW PRIVATE
+  # describe "#balance_insufficient?" do
+  #
+  #   it "returns true when amount to be deducted is more than current balance" do
+  #     allow(oyster_card).to receive(:balance) {20}
+  #     # oyster_card.top_up(20)
+  #     expect(oyster_card.balance_insufficient?(25)).to eq(true)
+  #   end
+  #
+  # end
+
 
 end
