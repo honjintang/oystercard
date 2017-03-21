@@ -1,6 +1,6 @@
 class Oyster
   def initialize
-    @balance
+    @balance = 0 
   end
 
   attr_reader :balance
