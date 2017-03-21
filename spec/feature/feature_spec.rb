@@ -4,8 +4,8 @@ describe "User Stories" do
 # As a customer
 # I want money on my card
 
-it "so customer can check balance, return balance" do
-  oyster = Oyster.new
-  expect(oyster).to respond_to(:balance)
-end
+  it "so customer can check balance, return balance" do
+    oyster_card = OysterCard.new
+    expect(oyster_card).to respond_to(:balance)
+  end
 end
