@@ -27,10 +27,12 @@ attr_reader :balance
   end
 
   def touch_in
+    fail "Cannot touch in: already in journey" if in_journey?
     self.in_journey = true
   end
 
   def touch_out
+    fail "Cannot touch out: not in journey" if !in_journey?
     self.in_journey = false
   end
 

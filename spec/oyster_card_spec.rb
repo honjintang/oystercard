@@ -72,6 +72,12 @@ describe OysterCard do
       expect(oyster_card).to be_in_journey
     end
 
+    it "raise exception when trying to touch_in twice" do
+      oyster_card.touch_in
+      expect { oyster_card.touch_in }.to raise_error("Cannot touch in: already in journey")
+
+    end
+
   end
 
   describe "#touch_out" do
@@ -81,6 +87,11 @@ describe OysterCard do
       oyster_card.touch_out
       expect(oyster_card).not_to be_in_journey
     end
+
+    it "raise exception when trying to touch_out twice" do
+      expect { oyster_card.touch_out }.to raise_error("Cannot touch out: not in journey")
+    end
+
 
   end
 
