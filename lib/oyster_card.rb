@@ -5,11 +5,12 @@ class OysterCard
   MIN_FARE = 1
 
 
-attr_reader :balance
+attr_reader :balance, :origin_station
 
   def initialize
     @balance = 0
     @in_journey = false
+    @origin_station = nil
   end
 
   def top_up(amount_of_money)
@@ -21,9 +22,12 @@ attr_reader :balance
     in_journey
   end
 
-  def touch_in
+  def touch_in(origin_station)
+
     fail "Cannot touch in: already in journey" if in_journey?
     fail "Cannot touch in: need at least £1 on card" if minimum_balance_not_on_card?
+    self.origin_station = origin_station
+
     self.in_journey = true
   end
 
@@ -36,7 +40,7 @@ attr_reader :balance
   private
 
   attr_accessor :in_journey
-  attr_writer :balance
+  attr_writer :balance, :origin_station
 
   def deduct(amount_of_money)
     fail "Cannot deduct money: insufficient funds" if balance_insufficient?(amount_of_money)

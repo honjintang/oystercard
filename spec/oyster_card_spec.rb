@@ -2,6 +2,7 @@ require 'oyster_card'
 
 describe OysterCard do
   subject(:oyster_card) {described_class.new}
+  let(:origin_station) {double(:origin_station)}
 
   describe '#balance' do
   it 'responds to balance enquiry' do
@@ -71,19 +72,25 @@ describe OysterCard do
 
     it 'should return in_journey? as true after oyster has called touch_in' do
       allow(oyster_card).to receive(:balance) {20}
-      oyster_card.touch_in
+      oyster_card.touch_in(origin_station)
       expect(oyster_card).to be_in_journey
     end
 
     it "raise exception when trying to touch_in twice" do
       allow(oyster_card).to receive(:balance) {20}
-      oyster_card.touch_in
-      expect { oyster_card.touch_in }.to raise_error("Cannot touch in: already in journey")
+      oyster_card.touch_in(origin_station)
+      expect { oyster_card.touch_in(origin_station) }.to raise_error("Cannot touch in: already in journey")
 
     end
 
     it "raises excepetion when less than minimum_fare on card" do
-      expect {oyster_card.touch_in }.to raise_error("Cannot touch in: need at least £1 on card")
+      expect {oyster_card.touch_in(origin_station) }.to raise_error("Cannot touch in: need at least £1 on card")
+    end
+
+    it "saves the origin station when it touches in" do
+      allow(oyster_card).to receive(:balance) {20}
+      oyster_card.touch_in(origin_station)
+      expect(oyster_card.origin_station).to eq(origin_station)
     end
 
   end
@@ -93,7 +100,7 @@ describe OysterCard do
     it 'should return in_journey as false after oyster on a journey calls touch_out' do
 
       allow(oyster_card).to receive(:balance) {20}
-      oyster_card.touch_in
+      oyster_card.touch_in(origin_station)
       oyster_card.touch_out
       expect(oyster_card).not_to be_in_journey
     end
@@ -104,7 +111,7 @@ describe OysterCard do
 
     it "deducts fare from balance after touch_out" do
       oyster_card.top_up(20)
-      oyster_card.touch_in
+      oyster_card.touch_in(origin_station)
       expect { oyster_card.touch_out }.to change{ oyster_card.balance}.by(-1)
     end
 
