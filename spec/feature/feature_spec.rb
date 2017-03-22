@@ -4,6 +4,8 @@ describe "User Stories" do
 let(:exit_station) {Station.new("Aldgate", 2)}
 let(:origin_station) {Station.new("London Bridge", 1)}
 let(:oyster_card) { OysterCard.new }
+let(:journey) { Journey.new }
+
 max_balance = OysterCard::MAX_BALANCE
 min_balance = OysterCard::MIN_BALANCE
 min_fare =    OysterCard::MIN_FARE
@@ -117,6 +119,14 @@ min_fare =    OysterCard::MIN_FARE
     expect(station.zone).to eq 2
   end
 
+  # In order to be charged correctly
+  # As a customer
+  # I need a penalty charge deducted if I fail to touch in or out
 
-
+  it "so the user can be charged correctly, deduct penalty charge if fail to touch in or out" do
+    oyster_card.top_up(max_balance)
+    oyster_card.touch_in(origin_station)
+    oyster_card.touch_in(origin_station)
+    expect(oyster_card.balance).to eq max_balance - penalty
+  end
 end
