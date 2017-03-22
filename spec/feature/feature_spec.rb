@@ -85,6 +85,8 @@ min_fare =    OysterCard::MIN_FARE
     oyster_card.top_up(max_balance)
     oyster_card.touch_in("Aldgate")
     expect(oyster_card.origin_station).to eq("Aldgate")
+    oyster_card.touch_out
+    expect(oyster_card.origin_station).to eq(nil)
 
   end
 

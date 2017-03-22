@@ -115,6 +115,14 @@ describe OysterCard do
       expect { oyster_card.touch_out }.to change{ oyster_card.balance}.by(-1)
     end
 
+    it "wipes origin station after successful touch out" do
+      allow(oyster_card).to receive(:balance) {20}
+      oyster_card.touch_in(origin_station)
+      oyster_card.touch_out
+      expect(oyster_card.origin_station).to eq(nil)
+
+    end
+
 
   end
 

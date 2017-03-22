@@ -9,7 +9,6 @@ attr_reader :balance, :origin_station
 
   def initialize
     @balance = 0
-    @in_journey = false
     @origin_station = nil
   end
 
@@ -19,7 +18,7 @@ attr_reader :balance, :origin_station
   end
 
   def in_journey?
-    in_journey
+    !!origin_station
   end
 
   def touch_in(origin_station)
@@ -34,6 +33,7 @@ attr_reader :balance, :origin_station
   def touch_out
     fail "Cannot touch out: not in journey" if !in_journey?
     deduct(MIN_FARE)
+    self.origin_station = nil
     self.in_journey = false
   end
 
