@@ -5,11 +5,18 @@ class OysterCard
   MIN_FARE = 1
 
 
-attr_reader :balance, :origin_station
+attr_reader :balance, :origin_station, :exit_station, :journeys
 
   def initialize
     @balance = 0
     @origin_station = nil
+    @exit_station = nil
+    @journeys = []
+
+    # @journeys = {
+    #   origin_station: nil,
+    #   exit_station: nil
+    # }
   end
 
   def top_up(amount_of_money)
@@ -27,20 +34,23 @@ attr_reader :balance, :origin_station
     fail "Cannot touch in: need at least £1 on card" if minimum_balance_not_on_card?
     self.origin_station = origin_station
 
-    self.in_journey = true
+
   end
 
-  def touch_out
+  def touch_out(exit_station)
     fail "Cannot touch out: not in journey" if !in_journey?
     deduct(MIN_FARE)
+    self.exit_station = exit_station
+# SOMETHING WHICH MAKES JOURNEYS ARRAY
+    journey_hash = {origin_station => exit_station}
+    journeys << journey_hash
     self.origin_station = nil
-    self.in_journey = false
+    self.exit_station = nil
   end
 
   private
 
-  attr_accessor :in_journey
-  attr_writer :balance, :origin_station
+  attr_writer :balance, :origin_station, :exit_station
 
   def deduct(amount_of_money)
     fail "Cannot deduct money: insufficient funds" if balance_insufficient?(amount_of_money)

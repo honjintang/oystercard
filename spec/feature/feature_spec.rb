@@ -1,7 +1,8 @@
 require "oyster_card"
 describe "User Stories" do
 
-let(:station) {double(:station)}
+let(:exit_station) {double(:exit_station)}
+let(:origin_station) {double(:origin_station)}
 let(:oyster_card) { OysterCard.new }
 max_balance = OysterCard::MAX_BALANCE
 min_balance = OysterCard::MIN_BALANCE
@@ -38,10 +39,10 @@ min_fare =    OysterCard::MIN_FARE
 
   # it "so user can spend money, allow transactions to occur until there is £0 card balance" do
   #     oyster_card.top_up(min_fare)
-  #     oyster_card.touch_in(station)
-  #     oyster_card.touch_out
-  #     oyster_card.touch_in(station)
-  #     expect { oyster_card.touch_out }.to raise_error("Cannot deduct money: insufficient funds")
+  #     oyster_card.touch_in(origin_station)
+  #     oyster_card.touch_out(exit_station)
+  #     oyster_card.touch_in(origin_station)
+  #     expect { oyster_card.touch_out(exit_station) }.to raise_error("Cannot deduct money: insufficient funds")
   #
   # end
 
@@ -52,9 +53,9 @@ min_fare =    OysterCard::MIN_FARE
   it 'so the user can pass the barriers, they need to be able to touch in and out' do
     oyster_card.top_up(max_balance)
     expect(oyster_card).not_to be_in_journey
-    oyster_card.touch_in(station)
+    oyster_card.touch_in(origin_station)
     expect(oyster_card).to be_in_journey
-    oyster_card.touch_out
+    oyster_card.touch_out(exit_station)
     expect(oyster_card).not_to be_in_journey
   end
 
@@ -63,7 +64,7 @@ min_fare =    OysterCard::MIN_FARE
   # I need to have the minimum amount (£1) for a single journey.
 
   it "so the user can't travel without minimum fare, restrict entry if less than £1 on card" do
-    expect{ oyster_card.touch_in(station) }.to raise_error("Cannot touch in: need at least £1 on card")
+    expect{ oyster_card.touch_in(origin_station) }.to raise_error("Cannot touch in: need at least £1 on card")
   end
 
   # In order to pay for my journey
@@ -72,8 +73,8 @@ min_fare =    OysterCard::MIN_FARE
 
   it "so the user can pay for journey, deduct correct fare from balance when touching out" do
     oyster_card.top_up(max_balance)
-    oyster_card.touch_in(station)
-    expect{ oyster_card.touch_out }.to change{ oyster_card.balance }.by(-1)
+    oyster_card.touch_in(origin_station)
+    expect{ oyster_card.touch_out(exit_station) }.to change{ oyster_card.balance }.by(-1)
 
   end
 
@@ -83,12 +84,22 @@ min_fare =    OysterCard::MIN_FARE
 
   it "so the user can be charged correctly, store the origin station on the card" do
     oyster_card.top_up(max_balance)
-    oyster_card.touch_in("Aldgate")
-    expect(oyster_card.origin_station).to eq("Aldgate")
-    oyster_card.touch_out
+    oyster_card.touch_in(origin_station)
+    expect(oyster_card.origin_station).to eq(origin_station)
+    oyster_card.touch_out(exit_station)
     expect(oyster_card.origin_station).to eq(nil)
 
   end
 
+  # In order to know where I have been
+  # As a customer
+  # I want to see to all my previous trips
+  it "so the user can see all his journeys, store journeys on the card" do
+    oyster_card.top_up(max_balance)
+    oyster_card.touch_in(origin_station)
+    oyster_card.touch_out(exit_station)
+    expect(oyster_card.journeys).to eq( [{origin_station => exit_station}] )
+
+  end
 
 end
