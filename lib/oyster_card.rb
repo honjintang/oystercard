@@ -5,18 +5,14 @@ class OysterCard
   MIN_FARE = 1
 
 
-attr_reader :balance, :origin_station, :exit_station, :journeys
+attr_reader :balance, :journeys
+attr_writer :journey
+attr_reader :journey
 
   def initialize
     @balance = 0
-    @origin_station = nil
-    @exit_station = nil
     @journeys = []
-
-    # @journeys = {
-    #   origin_station: nil,
-    #   exit_station: nil
-    # }
+    start_new_journey
   end
 
   def top_up(amount_of_money)
@@ -25,14 +21,15 @@ attr_reader :balance, :origin_station, :exit_station, :journeys
   end
 
   def in_journey?
-    !!origin_station
+    !!journey[:origin_station]
   end
 
   def touch_in(origin_station)
-
-    fail "Cannot touch in: already in journey" if in_journey?
     fail "Cannot touch in: need at least £1 on card" if minimum_balance_not_on_card?
-    self.origin_station = origin_station
+    fail "Cannot touch in: already in journey" if in_journey?
+    start_new_journey
+    update_origin_station(origin_station)
+
 
 
   end
@@ -40,17 +37,29 @@ attr_reader :balance, :origin_station, :exit_station, :journeys
   def touch_out(exit_station)
     fail "Cannot touch out: not in journey" if !in_journey?
     deduct(MIN_FARE)
-    self.exit_station = exit_station
-# SOMETHING WHICH MAKES JOURNEYS ARRAY
-    journey_hash = {origin_station => exit_station}
-    journeys << journey_hash
-    self.origin_station = nil
-    self.exit_station = nil
+    update_exit_station(exit_station)
+    self.journeys << journey #this might be an issue
+    start_new_journey
   end
 
   private
+  attr_writer :balance
+  def start_new_journey
+    @journey = {
+      origin_station: nil,
+      exit_station: nil
+    }
+  end
 
-  attr_writer :balance, :origin_station, :exit_station
+  def update_origin_station(origin_station)
+    @journey[:origin_station] = origin_station
+  end
+
+  def update_exit_station(exit_station)
+    @journey[:exit_station] = exit_station
+  end
+
+
 
   def deduct(amount_of_money)
     fail "Cannot deduct money: insufficient funds" if balance_insufficient?(amount_of_money)

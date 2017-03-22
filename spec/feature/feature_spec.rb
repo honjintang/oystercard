@@ -85,9 +85,9 @@ min_fare =    OysterCard::MIN_FARE
   it "so the user can be charged correctly, store the origin station on the card" do
     oyster_card.top_up(max_balance)
     oyster_card.touch_in(origin_station)
-    expect(oyster_card.origin_station).to eq(origin_station)
+    expect(oyster_card.journey[:origin_station]).to eq(origin_station)
     oyster_card.touch_out(exit_station)
-    expect(oyster_card.origin_station).to eq(nil)
+    expect(oyster_card.journey[origin_station]).to eq(nil)
 
   end
 
@@ -95,10 +95,15 @@ min_fare =    OysterCard::MIN_FARE
   # As a customer
   # I want to see to all my previous trips
   it "so the user can see all his journeys, store journeys on the card" do
+
+    test_hash = {
+      origin_station: origin_station,
+      exit_station: exit_station
+    }
     oyster_card.top_up(max_balance)
     oyster_card.touch_in(origin_station)
     oyster_card.touch_out(exit_station)
-    expect(oyster_card.journeys).to eq( [{origin_station => exit_station}] )
+    expect(oyster_card.journeys).to eq( [test_hash] )
 
   end
 

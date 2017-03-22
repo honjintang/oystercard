@@ -102,7 +102,7 @@ describe OysterCard do
     it "saves the origin station when it touches in" do
       allow(oyster_card).to receive(:balance) {max_balance}
       oyster_card.touch_in(origin_station)
-      expect(oyster_card.origin_station).to eq(origin_station)
+      expect(oyster_card.journey[:origin_station]).to eq(origin_station)
     end
 
   end
@@ -131,7 +131,7 @@ describe OysterCard do
       allow(oyster_card).to receive(:balance) {max_balance}
       oyster_card.touch_in(origin_station)
       oyster_card.touch_out(exit_station)
-      expect(oyster_card.origin_station).to eq(nil)
+      expect(oyster_card.journey[:origin_station]).to eq(nil)
 
     end
 
@@ -139,7 +139,7 @@ describe OysterCard do
       allow(oyster_card).to receive(:balance) {max_balance}
       oyster_card.touch_in(origin_station)
       oyster_card.touch_out(exit_station)
-      expect(oyster_card.journeys.first[origin_station]).to eq(exit_station)
+      expect(oyster_card.journeys.first[:exit_station]).to eq(exit_station)
     end
 
     it "saves the origin_station and exit_station in a hash" do
