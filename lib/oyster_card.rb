@@ -1,3 +1,4 @@
+require_relative "station"
 class OysterCard
 
   public
@@ -41,7 +42,7 @@ class OysterCard
   end
 
   private
-  
+
 
   attr_writer :balance
 

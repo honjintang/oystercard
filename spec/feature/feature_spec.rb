@@ -1,8 +1,8 @@
 require "oyster_card"
 describe "User Stories" do
 
-let(:exit_station) {double(:exit_station)}
-let(:origin_station) {double(:origin_station)}
+let(:exit_station) {Station.new("Aldgate", 2)}
+let(:origin_station) {Station.new("London Bridge", 1)}
 let(:oyster_card) { OysterCard.new }
 max_balance = OysterCard::MAX_BALANCE
 min_balance = OysterCard::MIN_BALANCE
@@ -106,5 +106,17 @@ min_fare =    OysterCard::MIN_FARE
     expect(oyster_card.journeys).to eq( [test_hash] )
 
   end
+
+  # In order to know how far I have travelled
+  # As a customer
+  # I want to know what zone a station is in
+
+  it "so the user how far they have travelled, station needs a name and zone" do
+    station = Station.new("Aldgate", 2)
+    expect(station.name).to eq "Aldgate"
+    expect(station.zone).to eq 2
+  end
+
+
 
 end
