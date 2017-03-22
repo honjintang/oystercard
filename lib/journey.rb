@@ -1,28 +1,24 @@
 class Journey
 
-  attr_reader :current_journey
+  attr_reader :journey_info
 
-  def initialize
-    reset
-  end
-
-  def reset
-    @current_journey = {
-      origin_station: nil,
+  def initialize(origin_station)
+    @journey_info = {
+      origin_station: origin_station.name,
       exit_station: nil
     }
   end
 
   def update_origin_station(origin_station)
-    @current_journey[:origin_station] = origin_station
+    @journey_info[:origin_station] = origin_station.name
   end
 
   def update_exit_station(exit_station)
-    @current_journey[:exit_station] = exit_station
+    @journey_info[:exit_station] = exit_station.name
   end
 
   def in_journey?
-    !!current_journey[:origin_station]
+    !!current_journey[:exit_station]
   end
 
 end

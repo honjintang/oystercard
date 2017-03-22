@@ -23,23 +23,24 @@ class OysterCard
     self.balance += amount_of_money
   end
 
-  def in_journey?
-    !!journey[:origin_station]
-  end
+  # def in_journey?
+  #   !!journey[:origin_station]
+  # end
 
   def touch_in(origin_station)
     fail "Cannot touch in: need at least £1 on card" if minimum_balance_not_on_card?
-    fail "Cannot touch in: already in journey" if in_journey?
-    reset_journey
-    update_origin_station(origin_station)
+    #fail "Cannot touch in: already in journey" if in_journey?
+    #reset_journey
+    @current_journey = Journey.new(origin_station)
+    #update_origin_station(origin_station)
   end
 
   def touch_out(exit_station)
-    fail "Cannot touch out: not in journey" if !in_journey?
+    #fail "Cannot touch out: not in journey" if !in_journey?
     deduct(MIN_FARE)
-    update_exit_station(exit_station)
-    self.journeys << journey
-    reset_journey
+    @current_journey.update_exit_station(exit_station)
+    self.journeys << @current_journey.journey_info
+    #reset_journey
   end
 
   private
